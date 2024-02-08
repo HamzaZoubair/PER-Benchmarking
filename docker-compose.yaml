@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgresql:
+    image: postgres:latest
+    container_name: my-postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: mydatabase  # Replace with your desired database name
+      POSTGRES_USER: myuser    # Replace with your desired username
+      POSTGRES_PASSWORD: mypassword  # Replace with your desired password
+    ports:
+      - "5432:5432"  # Expose PostgreSQL port (local_port:container_port)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist data to the host machine
+
+  neo4j:
+    image: neo4j:latest
+    container_name: my-neo4j
+    restart: always
+    environment:
+      NEO4J_AUTH: neo4j/password 
+       # Replace with your desired username/password
+    ports:
+      - "7474:7474"  # HTTP
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+
+      
+
+
+
+  mongodb:
+    image: mongo:latest
+    container_name: my-mongodb
+    restart: always
+    ports:
+      - "27017:27017"  # Expose MongoDB port
+    volumes:
+      - mongo:/data/db
+
+
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: my-jenkins
+    restart: always
+    ports:
+      - "50000:50000"  # Jenkins agent communication port
+    volumes:
+      - jenkins_home:/var/jenkins_home  # Persist Jenkins data to the host machine
+
+volumes:
+  postgres_data:  # Volume for PostgreSQL data persistence
+  jenkins_home:  # Volume for Jenkins data persistence
+  neo4j_data:
+  mongo:
