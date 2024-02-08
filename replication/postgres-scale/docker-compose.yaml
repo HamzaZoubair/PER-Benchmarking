@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  postgres-master:
+    image: postgres
+    container_name: postgres-master
+    restart: always
+    environment:
+      POSTGRES_USER: master_user
+      POSTGRES_PASSWORD: master_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-master-data:/var/lib/postgresql/data
+
+  postgres-slave:
+    image: postgres
+    container_name: postgres-slave
+    restart: always
+    environment:
+      POSTGRES_USER: slave_user
+      POSTGRES_PASSWORD: slave_password
+      POSTGRES_MASTER_HOST: postgres-master
+      POSTGRES_MASTER_PORT: 5432
+      POSTGRES_MASTER_USER: master_user
+      POSTGRES_MASTER_PASSWORD: master_password
+    depends_on:
+      - postgres-master
+    volumes:
+      - postgres-slave-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-master-data:
+  postgres-slave-data:
